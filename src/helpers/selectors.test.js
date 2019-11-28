@@ -1,17 +1,20 @@
 import { getAppointmentsForDay } from "./selectors";
-import {getInterview} from "./selectors";
+import { getInterview } from "./selectors";
+import { getInterviewersForDay } from "./selectors";
 
 const state = {
   days: [
     {
       id: 1,
       name: "Monday",
-      appointments: [1, 2, 3]
+      appointments: [1, 2, 3],
+      interviewers: []
     },
     {
       id: 2,
       name: "Tuesday",
-      appointments: [4, 5]
+      appointments: [4, 5],
+      interviewers: [2]
     }
   ],
   appointments: {
@@ -30,10 +33,10 @@ const state = {
     }
   },
   interviewers: {
-    "1": {  
-      "id": 1,
-      "name": "Sylvia Palmer",
-      "avatar": "https://i.imgur.com/LpaY82x.png"
+    "1": {
+      id: 1,
+      name: "Sylvia Palmer",
+      avatar: "https://i.imgur.com/LpaY82x.png"
     },
     "2": {
       id: 2,
@@ -69,18 +72,46 @@ test("getAppointmentsForDay returns an empty array when the day is not found", (
   expect(result.length).toEqual(0);
 });
 
+//
+test("getInterviewersForDay returns an array", () => {
+  const result = getInterviewersForDay(state, "Monday");
+  expect(Array.isArray(result)).toBe(true);
+});
 
+test("getInterviewersForDay returns an empty array when the Interviewers data is empty", () => {
+  const result = getInterviewersForDay({ state: [] }, "Monday");
+  expect(result.length).toEqual(0);
+});
+test("getInterviewersForDay returns the correct array when the Interviewers data is present", () => {
+  const result = getInterviewersForDay(state, "Tuesday");
+
+  expect(result).toEqual(
+    // 1
+    expect.arrayContaining([
+      // 2
+      expect.objectContaining({
+        // 3
+        id: 2,
+        name: "Tori Malcolm",
+        avatar: "https://i.imgur.com/Nmx0Qxo.png"
+      })
+    ])
+  );
+});
+
+//
 
 test("getInterview returns an object with the interviewer data", () => {
   const result = getInterview(state, state.appointments["3"].interview);
   expect(result).toEqual(
+    // 1      // 2
     expect.objectContaining({
       student: expect.any(String),
       interviewer: expect.objectContaining({
         id: expect.any(Number),
         name: expect.any(String),
-        avatar: expect.any(String)
-      })
+        avatar: expect.any(String) // 3
+      }) // 4
     })
   );
 });

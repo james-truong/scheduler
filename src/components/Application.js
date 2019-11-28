@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import DayList from "./DayList";
 import "components/Application.scss";
 import Appointment from "components/Appointment";
-import { getAppointmentsForDay, getInterview } from "../helpers/selectors";
+import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "../helpers/selectors";
 import axios from "axios";
 
 export default function Application(props) {
@@ -12,8 +12,10 @@ export default function Application(props) {
     day: "Monday",
     days: [],
     appointments: {},
-    interviewers: {}
+    interviewers: {},
   });
+
+
   const setDay = day => setState({ ...state, day });
   //const setDays = days => setState({...state, days})
   //const setDays = days => setState(prev => ({ ...prev, days }));
@@ -33,8 +35,42 @@ export default function Application(props) {
         appointments: appointments,
         interviewers: interviewers
       }));
-    });
+    })
   }, []);
+  //const interviewers = getInterviewersForDay(state, state.day);
+
+
+  const bookInterview = (id, interview) => {
+    const appointment = {
+      ...state.appointments[id],
+      interview
+    }
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    // push appointment to db and update state if successful
+    return axios.put(`api/appointments/${id}`, appointment)
+      .then(() => setState(prev => ({ ...prev, appointments })));
+  }
+
+  const cancelInterview = (id) => {
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    }
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    // delete interview from db and update state if successful
+    return axios.delete(`api/appointments/${id}`)
+      .then(() => setState(prev => ({ ...prev, appointments })));
+  }
 
   return (
     <main className="layout">
@@ -60,10 +96,13 @@ export default function Application(props) {
             const interview = getInterview(state, appointment.interview);
             return (
               <Appointment
+                cancelInterview={cancelInterview}
+                bookInterview={bookInterview}
                 key={appointment.id}
                 id={appointment.id}
                 time={appointment.time}
                 interview={interview}
+                interviewers={getInterviewersForDay(state, state.day)}
               />
             );
           })}
@@ -72,3 +111,4 @@ export default function Application(props) {
     </main>
   );
 }
+
