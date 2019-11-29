@@ -72,12 +72,15 @@ export default function useApplicationData() {
       [id]: appointment
     };
 
-    return axios.put(`/api/appointments/${id}`, { interview }).then(() =>
+    return axios.put(`/api/appointments/${id}`, { interview }).then(() => {
+      const SelectedDay = state.days.filter(d => d.name === state.day);
+
+      state.days[SelectedDay[0].id - 1].spots--;
       dispatch({
         type: SET_INTERVIEW,
         appointments
-      })
-    );
+      });
+    });
   }
 
   function cancelInterview(id) {
@@ -90,12 +93,14 @@ export default function useApplicationData() {
       [id]: appointment
     };
 
-    return axios.delete(`/api/appointments/${id}`).then(() =>
+    return axios.delete(`/api/appointments/${id}`).then(() => {
+      const dayData = state.days.filter(d => d.name === state.day);
+      state.days[dayData[0].id - 1].spots++;
       dispatch({
         type: SET_INTERVIEW,
         appointments
-      })
-    );
+      });
+    });
   }
 
   return { state, setDay, bookInterview, cancelInterview };
