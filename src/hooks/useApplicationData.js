@@ -1,6 +1,31 @@
 import { useReducer, useEffect } from "react";
 import axios from "axios";
 
+  
+function remainingSpots(Appointments) {
+  // create empty array for each of the days spots left
+  let spotsRemainingPerDay = [];
+  let spotsLeftInDay = 0;
+  let appointmentSlotsCounter = 0;
+  
+  //loop through each appointment slot to count empty slots (null)
+  for (let appointment of Object.values(Appointments)) {
+    // if interview is null, slot is open
+    if (!appointment.interview) {
+      spotsLeftInDay++;
+    }
+    appointmentSlotsCounter++;
+    //when day is finished, reset counters to check next day
+    // slots are always 5 assumed
+    if (appointmentSlotsCounter === 5) {
+      spotsRemainingPerDay.push(spotsLeftInDay);
+      spotsLeftInDay = 0;
+      appointmentSlotsCounter = 0;
+    }
+  }
+  return spotsRemainingPerDay;
+}
+
 export default function useApplicationData() {
   const SET_DAY = "SET_DAY";
   const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
@@ -21,6 +46,7 @@ export default function useApplicationData() {
           interviewers: action.interviewers
         };
       case SET_INTERVIEW: {
+
         return { ...state, appointments: action.appointments };
       }
 
@@ -71,11 +97,14 @@ export default function useApplicationData() {
       ...state.appointments,
       [id]: appointment
     };
+    const arr = remainingSpots(appointments);          
+    for (let i in arr) {
+      state.days[i].spots = arr[i];
+    }
 
     return axios.put(`/api/appointments/${id}`, { interview }).then(() => {
       const SelectedDay = state.days.filter(d => d.name === state.day);
 
-      state.days[SelectedDay[0].id - 1].spots--;
       dispatch({
         type: SET_INTERVIEW,
         appointments
@@ -92,10 +121,14 @@ export default function useApplicationData() {
       ...state.appointments,
       [id]: appointment
     };
+    const arr = remainingSpots(appointments);          
+    for (let i in arr) {
+      // map each day to the corresponding spots
+      state.days[i].spots = arr[i];
+    }
 
     return axios.delete(`/api/appointments/${id}`).then(() => {
       const dayData = state.days.filter(d => d.name === state.day);
-      state.days[dayData[0].id - 1].spots++;
       dispatch({
         type: SET_INTERVIEW,
         appointments
