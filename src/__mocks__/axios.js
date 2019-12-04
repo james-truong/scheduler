@@ -83,6 +83,7 @@ export default {
     }
   }),
   put: jest.fn(url => {
+    console.log("add/editing");
     if (url === "/api/appointments/1" || url === "/api/appointments/2") {
       return Promise.resolve({
         status: 204,
@@ -92,6 +93,7 @@ export default {
   }),
 
   delete: jest.fn(url => {
+    console.log("deleting");
     if (url === "/api/appointments/1" || url === "/api/appointments/2") {
       return Promise.resolve({
         status: 204,

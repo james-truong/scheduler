@@ -58,7 +58,7 @@ describe("Application", () => {
       queryByText(day, "Monday")
     );
     
-    expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
+    expect(getByText(day, "no spots remaining")).toBeInTheDocument();
       
   });
 
@@ -66,10 +66,9 @@ describe("Application", () => {
   it("loads data, cancels an interview and increases the spots remaining for Monday by 1", async () => {
     // 1. Render the Application.
     const { container, debug } = render(<Application />);
-  
+    
     // 2. Wait until the text "Archie Cohen" is displayed.
     await waitForElement(() => getByText(container, "Archie Cohen"));
-  
     // 3. Click the "Delete" button on the booked appointment.
     const appointment = getAllByTestId(container, "appointment").find(
       appointment => queryByText(appointment, "Archie Cohen")
@@ -89,14 +88,14 @@ describe("Application", () => {
     expect(getByText(appointment, "Deleting...")).toBeInTheDocument();
     // 7. Wait until the element with the "Add" button is displayed.
     await waitForElement(() => getByAltText(appointment, "Add"));
-    debug();
+    console.log(prettyDOM(appointment));
     // 8. Check that the DayListItem with the text "Monday" also has the text "2 spots remaining".
     const day = getAllByTestId(container, "day").find(day =>
       queryByText(day, "Monday")
     );
     console.log(prettyDOM(day));
     // ask mentor
-    //expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
+    expect(getByText(day, "2 spots remaining")).toBeInTheDocument();
   });
 
   it("loads data, edits an interview and keeps the spots remaining for Monday the same", async () => {
@@ -123,7 +122,7 @@ describe("Application", () => {
 
     expect(getByText(appointment, "Saving...")).toBeInTheDocument();
   
-    //will not save to Jay Chai due to websockets so just check that render is done
+    //will not save to James due to websockets so just check that render is done
     await waitForElement(() => getByText(container, "James"));
 
     const day = getAllByTestId(container, "day").find(day =>
@@ -131,7 +130,7 @@ describe("Application", () => {
     );
 
     //Expect no change in spots due to websockets implementation as well as since it is edit
-    expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
+    waitForElement(() => expect(getByText(day, "1 spot remaining")).toBeInTheDocument());
   }); 
 
   it('6. shows the save error when failing to save an appointment', async () => {
