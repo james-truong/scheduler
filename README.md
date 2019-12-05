@@ -5,6 +5,9 @@ React scheduler with up to five appointments per day.
 
 Deployed api server using Heroku + CircleCI for build integration + Netlify for hosting the production code.
 
+Tested with Jest + React-testing-library for unit tests and integration.
+Tested with Cypress for E2E.
+
 ## Final Product
 
 Landing page, with up to five appointments per day and dynamic counter for the remaining spots.
@@ -12,6 +15,7 @@ Landing page, with up to five appointments per day and dynamic counter for the r
 ### Creating a new appointment
 
 Allows the creation (or edition) of an appointment, by entering the name and selecting the interviewer.
+
 
 !["create new appointment"](https://github.com/james-truong/scheduler/blob/production/docs/demo.gif)
 
