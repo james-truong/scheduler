@@ -1,22 +1,19 @@
 # Scheduler Project
 
 React scheduler with up to five appointments per day. 
-
-## Final Product
-
-### Opening page
-
-Landing page, with up to five appointments per day and dynamic counter for the remaining spots.
+# [Link (data may be on sleep mode)](https://xenodochial-aryabhata-b2ea58.netlify.com/)
 
 Deployed api server using Heroku + CircleCI for build integration + Netlify for hosting the production code.
 
-!["opening page"](https://github.com/SebDufresne/scheduler/blob/master/docs/main-view.png)
+## Final Product
+
+Landing page, with up to five appointments per day and dynamic counter for the remaining spots.
 
 ### Creating a new appointment
 
 Allows the creation (or edition) of an appointment, by entering the name and selecting the interviewer.
 
-!["create new appointment"](https://github.com/SebDufresne/scheduler/blob/master/docs/add-appointment.png)
+!["create new appointment"](https://github.com/james-truong/scheduler/blob/production/docs/demo.gif)
 
 ### Contextual warnings
 
