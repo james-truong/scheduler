@@ -8,6 +8,8 @@ React scheduler with up to five appointments per day.
 
 Landing page, with up to five appointments per day and dynamic counter for the remaining spots.
 
+Deployed api server using Heroku + CircleCI for build integration + Netlify for hosting the production code.
+
 !["opening page"](https://github.com/SebDufresne/scheduler/blob/master/docs/main-view.png)
 
 ### Creating a new appointment
